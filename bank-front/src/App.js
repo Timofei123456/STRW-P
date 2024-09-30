@@ -1,6 +1,7 @@
 import './App.css';
 import ClientAPI from "./api/services";
 import Table from "./Table";
+import Form from "./Form";
 import { useState } from "react";
 
 const initialClients = ClientAPI.all();
@@ -15,9 +16,17 @@ function App() {
     }
   };
 
+  const addClient = (client) => {
+    const newClient = ClientAPI.add(client);
+    if(newClient) {
+      setClients([...clients, newClient]);
+    }
+  }
+
   return (
     <div className="App">
-      <Table clients={ClientAPI.all()} delClient={delCli} />
+      <Form handleSubmit={addClient} inClient={{name: "", surname: "", phone: ""}}/>
+      <Table clients={clients} delClient={delCli} />
     </div>
   );
 }
