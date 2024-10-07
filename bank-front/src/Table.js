@@ -1,9 +1,11 @@
+import { ThemeProvider } from '@mui/material/styles';
 import { Table, TableContainer, Button, TableBody, TableRow, TableHead, Paper, TableCell } from "@mui/material";
-import React from "react";
+import theme from './tableTheme';
 
 const ClientTable = ({ clients, delClient }) => {
 
   return (
+    <ThemeProvider theme={theme}>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -29,6 +31,7 @@ const ClientTable = ({ clients, delClient }) => {
         </TableBody>
       </Table>
     </TableContainer>
+    </ThemeProvider>
   );
 };
 
