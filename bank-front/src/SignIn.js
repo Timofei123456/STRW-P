@@ -2,17 +2,20 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useState } from "react";
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import theme from './signInTheme';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn({ setAuth }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username === "admin" && password === "admin") {
       setAuth(true);
       setOpen(false);
+      navigate("/");
     } else {
       alert("Неверные данные для входа");
     }
@@ -25,7 +28,7 @@ function SignIn({ setAuth }) {
         color="primary"
         onClick={() => setOpen(true)}
       >
-        Login
+        SignIn
       </Button>
       <Modal
         open={open}
@@ -47,7 +50,7 @@ function SignIn({ setAuth }) {
           }}
         >
           <Typography id="modal-title" variant="h6" component="h2">
-            Login
+            SignIn
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -89,7 +92,7 @@ function SignIn({ setAuth }) {
                 },
               }}
             >
-              Login
+              SignIn
             </Button>
           </form>
         </Box>
