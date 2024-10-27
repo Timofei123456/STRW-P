@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ThemeProvider, } from '@mui/material/styles';
 import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
-import lightTheme from '../lightTheme';
+import { lightTheme, darkTheme } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn({ setAuth }) {
@@ -20,7 +20,7 @@ function SignIn({ setAuth }) {
   };
 
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Paper elevation={3}>
         <Typography variant="h6" component="h2">

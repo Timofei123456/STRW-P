@@ -1,7 +1,7 @@
 import ClientAPI from "../api/services";
-import Table from "./Table";
-import Form from "./Form";
-import SignIn from './SignIn';
+import Table from "../pages/Main/components/Table";
+import Form from "../pages/Main/components/Form";
+import SignIn from '../pages/SignIn/components/SignIn';
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 
@@ -29,7 +29,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/SignIn" element={<SignIn setAuth={setIsAuthenticated}/>}/>
+          <Route path="/SignIn" element={<SignIn setAuth={setIsAuthenticated} />} />
           <Route path="/" element={isAuthenticated ? (
             <>
               <Form handleSubmit={addClient} inClient={{ name: "", surname: "", phone: "" }} />
@@ -38,10 +38,10 @@ function App() {
           ) : (
             <Navigate to="/SignIn" />)
           } />
-          </Routes>
+        </Routes>
       </div>
-      </Router>
-      );
+    </Router>
+  );
 }
 
-      export default App;
+export default App;
