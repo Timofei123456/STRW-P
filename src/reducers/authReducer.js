@@ -1,4 +1,4 @@
-import { SIGNIN_USER, SIGNOUT_USER, SIGNERROR_USER } from "../actions/types.js";
+import { SIGNIN_USER, SIGNOUT_USER, SIGNERROR_USER } from "../actions/types";
 
 const initialState = {
     isAuthenticated: false,

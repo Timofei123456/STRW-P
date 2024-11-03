@@ -3,8 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
 import { lightTheme, darkTheme } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { signInUser } from '../../../actions/authActions';
+import { useDispatch} from 'react-redux';
+import { signIn } from '../../../actions/authActions';
 
 function SignIn() {
   const [username, setUsername] = useState("");
@@ -14,13 +14,14 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(signInUser());
+    const success = await dispatch(signIn(username, password));
+    if (success) {
       navigate("/");
-    } catch (error) {
-      alert("Ошибка входа: " + error.message);
+    } else {
+      alert("Ошибка входа: Неверные учетные данные");
     }
   };
+
 
   return (
     <ThemeProvider theme={lightTheme}>
