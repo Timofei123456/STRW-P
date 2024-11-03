@@ -57,31 +57,42 @@ const lightTheme = createTheme({
         MuiContainer: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    maxWidth: '800px',
-                    margin: '40px auto',
+                    minWidth: '99.1vw',
+                    minHeight: '40vh',
                     padding: '20px',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     backgroundColor: theme.palette.background.default,
-                    borderRadius: '10px',
-                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                    width: '300px',
+                    width: '100%',
                 }),
             },
         },
         MuiPaper: {
-            styleOverrides: {
-                root: ({ theme }) => ({
-                    backgroundColor: theme.palette.background.paper,
-                    borderRadius: '10px',
-                    padding: '20px',
-                    boxShadow: '0 0 10px rgba(0, 0, 0, 0. 1)',
-                    width: 'auto',
-                    maxWidth: '400px',
-                }),
-            },
+            variants: [
+                {
+                    props: { variant: 'main' },
+                    style: ({ theme }) => ({
+                        backgroundColor: theme.palette.background.paper,
+                        padding: '20px',
+                        width: '100%',
+                        minHeight: 'calc(100vh - 40px)',
+                        boxSizing: 'border-box',
+                    }),
+                },
+                {
+                    props: { variant: 'auth' },
+                    style: ({ theme }) => ({
+                        backgroundColor: theme.palette.background.paper,
+                        borderRadius: '10px',
+                        padding: '20px',
+                        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                        width: 'auto',
+                        maxWidth: '400px',
+                    }),
+                },
+            ],
         },
         MuiTypography: {
             styleOverrides: {
@@ -117,11 +128,13 @@ const lightTheme = createTheme({
                     style: ({ theme }) => ({
                         fontSize: '14px',
                         padding: '5px 10px',
+                        margin: '5px',
                         borderRadius: '5px',
                         border: 'none',
                         cursor: 'pointer',
                         backgroundColor: theme.palette.delete.main,
                         color: theme.palette.text.secondary,
+                        boxSizing: 'border-box',
                         width: '50%',
                         '&:hover': {
                             backgroundColor: theme.palette.delete.altermain,
@@ -133,11 +146,13 @@ const lightTheme = createTheme({
                     style: ({ theme }) => ({
                         fontSize: '14px',
                         padding: '5px 10px',
+                        margin: '5px',
                         borderRadius: '5px',
                         border: 'none',
                         cursor: 'pointer',
                         backgroundColor: theme.palette.edit.main,
                         color: theme.palette.text.secondary,
+                        boxSizing: 'border-box',
                         width: '50%',
                         '&:hover': {
                             backgroundColor: theme.palette.edit.altermain,
@@ -148,7 +163,7 @@ const lightTheme = createTheme({
                     props: { variant: 'add' },
                     style: ({ theme }) => ({
                         height: '55px',
-                        marginLeft: '20px',
+                        marginTop: '20px',
                         padding: '10px 20px',
                         fontSize: '16px',
                         fontWeight: 'bold',
@@ -184,7 +199,8 @@ const lightTheme = createTheme({
                     borderSpacing: '0 5px',
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                     borderRadius: '10px',
-                    width: 'auto',
+                    width: '100%',
+                    maxWidth: '1200px',
                 },
             },
         },
@@ -216,6 +232,7 @@ const lightTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     padding: '6px 8px',
+                    paddingRight: '25px',
                     border: `1px solid ${theme.palette.divider}`,
                     fontSize: '14px',
                     '&:first-child': {
@@ -224,8 +241,9 @@ const lightTheme = createTheme({
                     '&:last-child': {
                         borderRadius: '0 10px 10px 0',
                     },
-                    width: '120px',
-                    maxWidth: '120px',
+                    width: 'auto',
+                    minWidth: '150px',
+                    maxWidth: '200px',
                     whiteSpace: 'nowrap',
                 }),
                 head: {
@@ -254,7 +272,7 @@ const darkTheme = createTheme({
             altermain: '#a26120',
         },
         background: {
-            default: '#131313',
+            default: '#292929',
             paper: '#1e1e1e',
             odd: '#5c5c5c',
             even: '#8a8a8a',

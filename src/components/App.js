@@ -2,15 +2,18 @@ import ClientAPI from "../api/services";
 import Table from "../pages/Main/components/Table";
 import Form from "../pages/Main/components/Form";
 import SignIn from '../pages/SignIn/components/SignIn';
+import { useSelector, useDispatch } from 'react-redux';
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { lightTheme, darkTheme } from '../theme/theme';
 import { useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 
 const initialClients = ClientAPI.all();
 
 function App() {
-
   const [clients, setClients] = useState(initialClients);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
+  const dispatch = useDispatch();
 
   const delCli = (id) => {
     if (ClientAPI.delete(id)) {
@@ -26,21 +29,24 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/SignIn" element={<SignIn setAuth={setIsAuthenticated} />} />
-          <Route path="/" element={isAuthenticated ? (
-            <>
-              <Form handleSubmit={addClient} inClient={{ name: "", surname: "", phone: "" }} />
-              <Table clients={clients} delClient={delCli} />
-            </>
-          ) : (
-            <Navigate to="/SignIn" />)
-          } />
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider theme={isAuthenticated ? darkTheme : lightTheme}>
+      <CssBaseline />
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/SignIn" element={<SignIn setAuth={isAuthenticated} />} />
+            <Route path="/" element={isAuthenticated ? (
+              <>
+                <Form handleSubmit={addClient} inClient={{ name: "", surname: "", phone: "" }} />
+                <Table clients={clients} delClient={delCli} />
+              </>
+            ) : (
+              <Navigate to="/SignIn" />
+            )} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

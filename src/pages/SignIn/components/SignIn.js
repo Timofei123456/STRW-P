@@ -1,28 +1,31 @@
 import React, { useState } from "react";
-import { ThemeProvider, } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
 import { lightTheme, darkTheme } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signInUser } from '../../../actions/authActions';
 
-function SignIn({ setAuth }) {
+function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username === "1" && password === "1") {
-      setAuth(true);
+    try {
+      dispatch(signInUser());
       navigate("/");
-    } else {
-      alert("Неверные данные для входа");
+    } catch (error) {
+      alert("Ошибка входа: " + error.message);
     }
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       <CssBaseline />
-      <Paper elevation={3}>
+      <Paper variant="auth" elevation={3}>
         <Typography variant="h6" component="h2">
           Sign In
         </Typography>
