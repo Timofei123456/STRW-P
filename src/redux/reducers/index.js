@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import userReducer from './userReducer';
-import authReducer from "./authReducer";
+import userReducer from '../slicers/userSlice';
+import authReducer from "../slicers/authSlice";
 
 const rootReducer = combineReducers({
     userState: userReducer,

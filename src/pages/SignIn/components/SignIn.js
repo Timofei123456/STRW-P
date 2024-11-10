@@ -1,26 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
 import { lightTheme, darkTheme } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch} from 'react-redux';
-import { signIn } from '../../../actions/authActions';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { signInUser, signErrorUser, authenticateUser } from '../../../redux/slicers/authSlice';
 function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const error = useSelector(state => state.authState.error);
+  const users = useSelector(state => state.userState.users);
+  const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await dispatch(signIn(username, password));
-    if (success) {
-      navigate("/");
-    } else {
-      alert("Ошибка входа: Неверные учетные данные");
-    }
+    
+    await dispatch(authenticateUser ({ username, password, users }));
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(signInUser ({ username }));
+      navigate("/");
+    }
+  }, [isAuthenticated, dispatch, navigate, username]);
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      dispatch(signErrorUser (null));
+    }
+  }, [error, dispatch]);
 
 
   return (
