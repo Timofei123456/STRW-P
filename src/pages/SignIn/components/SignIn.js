@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
-import { lightTheme, darkTheme } from '../../../theme/theme';
+import { lightTheme } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInUser, signErrorUser, authenticateUser } from '../../../redux/slicers/authSlice';
+import { signInUser , signErrorUser  } from '../../../redux/slicers/authSlice';
+import { signIn  } from '../../../api/api'; // Импортируйте функцию для авторизации
+
 function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,21 +14,24 @@ function SignIn() {
   const dispatch = useDispatch();
 
   const error = useSelector(state => state.authState.error);
-  const users = useSelector(state => state.userState.users);
   const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    await dispatch(authenticateUser ({ username, password, users }));
+    try {
+      const token = await signIn (username, password);
+      dispatch(signInUser ({ token }));
+    } catch (error) {
+      dispatch(signErrorUser (error.message));
+    }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(signInUser ({ username }));
       navigate("/");
     }
-  }, [isAuthenticated, dispatch, navigate, username]);
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     if (error) {
@@ -34,7 +39,6 @@ function SignIn() {
       dispatch(signErrorUser (null));
     }
   }, [error, dispatch]);
-
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -51,6 +55,7 @@ function SignIn() {
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
             fullWidth
+            required // Добавлено для валидации
           />
           <TextField
             label="Password"
@@ -59,6 +64,7 @@ function SignIn() {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             fullWidth
+            required // Добавлено для валидации
           />
           <Button
             type="submit"
