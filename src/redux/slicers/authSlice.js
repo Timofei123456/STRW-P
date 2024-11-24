@@ -35,6 +35,5 @@ const authSlice = createSlice({
     }
 });
 
-// Экспортируйте действия
 export const { signInUser , signOutUser , signErrorUser , setUser  } = authSlice.actions;
 export default authSlice.reducer;

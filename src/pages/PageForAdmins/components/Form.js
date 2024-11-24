@@ -1,8 +1,6 @@
-import { ThemeProvider } from '@mui/material/styles';
-import { Button, Container } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useState } from "react";
-import { lightTheme, darkTheme } from '../../../theme/theme';
 
 const Form = ({ handleSubmit, inClient }) => {
   const [client, setClient] = useState(inClient);
@@ -19,9 +17,11 @@ const Form = ({ handleSubmit, inClient }) => {
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
       <form onSubmit={onSubmit}>
       <Container>
+        <Typography variant="h6" component="h2">
+          Add
+        </Typography>
         <TextField
           label="Name"
           type="text"
@@ -47,7 +47,6 @@ const Form = ({ handleSubmit, inClient }) => {
             variant="add">Add</Button>
       </Container>
       </form>
-    </ThemeProvider>
   );
 };
 

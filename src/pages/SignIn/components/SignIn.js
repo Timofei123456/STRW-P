@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
-import { lightTheme } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInUser , signErrorUser  } from '../../../redux/slicers/authSlice';
-import { signIn  } from '../../../api/api'; // Импортируйте функцию для авторизации
+import { signIn  } from '../../../api/api';
 
 function SignIn() {
   const [username, setUsername] = useState("");
@@ -41,7 +39,7 @@ function SignIn() {
   }, [error, dispatch]);
 
   return (
-    <ThemeProvider theme={lightTheme}>
+    <>
       <CssBaseline />
       <Paper variant="auth" elevation={3}>
         <Typography variant="h6" component="h2">
@@ -55,7 +53,7 @@ function SignIn() {
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
             fullWidth
-            required // Добавлено для валидации
+            required
           />
           <TextField
             label="Password"
@@ -64,7 +62,7 @@ function SignIn() {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             fullWidth
-            required // Добавлено для валидации
+            required
           />
           <Button
             type="submit"
@@ -76,7 +74,7 @@ function SignIn() {
           </Button>
         </form>
       </Paper>
-    </ThemeProvider>
+      </>
   );
 }
 
