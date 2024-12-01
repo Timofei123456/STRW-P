@@ -5,10 +5,12 @@ const ClientTable = ({ clients, delClient }) => {
         <Paper>
             <Table>
                 <TableHead>
+                    <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell>Surname</TableCell>
                         <TableCell>Phone</TableCell>
                         <TableCell>Actions</TableCell>
+                    </TableRow>
                 </TableHead>
                 <TableBody>
                     {clients.map(client => (

@@ -3,7 +3,9 @@ import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInUser , signErrorUser  } from '../../../redux/slicers/authSlice';
-import { signIn  } from '../../../api/api';
+import { signIn } from '../../../api/authApi';
+import { fetchCurrentUser  } from '../../../api/userApi';
+import { setCurrentUser  } from '../../../redux/slicers/userSlice';
 
 function SignIn() {
   const [username, setUsername] = useState("");
@@ -16,10 +18,16 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const token = await signIn (username, password);
+      const token = await signIn(username, password);
       dispatch(signInUser ({ token }));
+
+      const userInfo = await fetchCurrentUser (username, token);
+      dispatch(setCurrentUser (userInfo));
+
+      navigate("/");
+
     } catch (error) {
       dispatch(signErrorUser (error.message));
     }
@@ -27,7 +35,11 @@ function SignIn() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
   }, [isAuthenticated, navigate]);
 
@@ -72,9 +84,10 @@ function SignIn() {
           >
             Sign In
           </Button>
+          {error && <Typography color="error">{error}</Typography>}
         </form>
       </Paper>
-      </>
+    </>
   );
 }
 

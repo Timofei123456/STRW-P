@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchClients } from '../../../redux/slicers/clientSlice';
+import { addClient, deleteClient } from '../../../redux/slicers/clientSlice';
 import Form from './Form';
 import Table from './Table';
 import CardView from './CardView';
-import ClientAPI from "../../../api/services";
-import { Button, Box, Container } from '@mui/material';
+import { Button, Box, Container, Typography } from '@mui/material';
 
-const PageForAdmins = ({ clients, setClients }) => {
+const PageForAdmins = () => {
     const [view, setView] = useState('table');
+    const dispatch = useDispatch();
 
-    const delCli = (id) => {
-        if (ClientAPI.delete(id)) {
-            setClients(clients.filter((client) => client.id !== id));
+    const clients = useSelector(state => state.clientState.clients || []);
+    const error = useSelector(state => state.clientState.error || null);
+    
+    const token = useSelector(state => state.authState.token);
+
+    useEffect(() => {
+        if (token) {
+            dispatch(fetchClients(token));
         }
+    }, [dispatch, token]);
+
+    const handleDeleteClient = async (id) => {
+        await dispatch(deleteClient({ id, token }));
     };
 
-    const addClient = (client) => {
-        const newClient = ClientAPI.add(client);
-        if (newClient) {
-            setClients([...clients, newClient]);
-        }
+    const handleAddClient = async (client) => {
+        await dispatch(addClient({ client, token }));
     };
 
     const toggleView = () => {
@@ -28,7 +37,7 @@ const PageForAdmins = ({ clients, setClients }) => {
     return (
         <>
             <div>
-                <Form handleSubmit={addClient} inClient={{ name: "", surname: "", phone: "" }} />
+                <Form handleSubmit={handleAddClient} inClient={{ name: "", surname: "", phone: "" }} />
                 <Container>
                     <Button variant="auth" onClick={toggleView}>
                         {view === 'table' ? 'Переключиться на карточки' : 'Переключиться на таблицу'}
@@ -36,12 +45,19 @@ const PageForAdmins = ({ clients, setClients }) => {
                 </Container>
             </div>
 
-
             <Box style={{ height: '100vh', width: '100vw' }}>
-                {view === 'table' ? (
-                    <Table clients={clients} delClient={delCli} />
+                {error ? (
+                    <div>Error: {error}</div>
+                ) : Array.isArray(clients) && clients.length > 0 ? (
+                    view === 'table' ? (
+                        <Table clients={clients} delClient={handleDeleteClient} />
+                    ) : (
+                        <CardView clients={clients} delClient={handleDeleteClient} />
+                    )
                 ) : (
-                    <CardView clients={clients} delClient={delCli} />
+                    <Container>
+                    <Typography>No clients available</Typography>
+                    </Container>
                 )}
             </Box>
         </>

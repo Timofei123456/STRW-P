@@ -1,22 +1,28 @@
-import ClientAPI from "../api/services";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { BrowserRouter } from "react-router-dom";
 import NavBar from './NavBar';
 import Router from './Router';
-import { BrowserRouter } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { CssBaseline, ThemeProvider } from '@mui/material';
 import { lightTheme, darkTheme } from '../theme/theme';
-import { useState } from "react";
-
-const initialClients = ClientAPI.all();
+import { fetchClients } from '../redux/slicers/clientSlice';
 
 function App() {
-  const [clients, setClients] = useState(initialClients);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const dispatch = useDispatch();
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  
   const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
-
+  const token = useSelector(state => state.authState.token);
+  
   const toggleTheme = () => {
     setIsDarkMode(prevMode => !prevMode);
   };
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      dispatch(fetchClients(token));
+    }
+  }, [dispatch, isAuthenticated, token]);
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
@@ -24,11 +30,7 @@ function App() {
       <BrowserRouter>
         <NavBar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
         <div className="App">
-          <Router 
-            isAuthenticated={isAuthenticated} 
-            clients={clients} 
-            setClients={setClients} 
-          />
+          <Router isAuthenticated={isAuthenticated} />
         </div>
       </BrowserRouter>
     </ThemeProvider>

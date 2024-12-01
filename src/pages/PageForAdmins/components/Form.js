@@ -28,6 +28,7 @@ const Form = ({ handleSubmit, inClient }) => {
           name="name"
           value={client.name}
           onChange={handleChange}
+          required
         />
         <TextField
           label="Surname"
@@ -35,6 +36,7 @@ const Form = ({ handleSubmit, inClient }) => {
           name="surname"
           value={client.surname}
           onChange={handleChange}
+          required
         />
         <TextField
           label="Phone"
@@ -42,6 +44,7 @@ const Form = ({ handleSubmit, inClient }) => {
           name="phone"
           value={client.phone}
           onChange={handleChange}
+          required
         />
         <Button type="submit"
             variant="add">Add</Button>

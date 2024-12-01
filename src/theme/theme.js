@@ -14,8 +14,8 @@ const lightTheme = createTheme({
             altermain: '#e2786e',
         },
         edit: {
-            main: '#b16c25',
-            altermain: '#d48a40',
+            main: '#e99516',
+            altermain: '#e6ad56',
         },
         background: {
             default: '#f9f9f9',
@@ -147,6 +147,11 @@ const lightTheme = createTheme({
                     fontSize: '18px',
                     fontWeight: 'bold',
                     marginBottom: '10px',
+                },
+                h5: {
+                    fontSize: '14px',
+                    fontWeight: 'normal',
+                    marginBottom: '8px',
                 },
             },
         },
@@ -302,7 +307,7 @@ const lightTheme = createTheme({
                     paddingRight: '25px',
                     border: `1px solid ${theme.palette.divider}`,
                     fontSize: '14px',
-                    '&:first-child': {
+                    '&:first-of-type': {
                         borderRadius: '10px 0 0 10px',
                     },
                     '&:last-child': {
