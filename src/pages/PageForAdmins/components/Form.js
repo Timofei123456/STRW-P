@@ -1,23 +1,31 @@
+import React from 'react';
 import { Button, Container, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { useState } from "react";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const Form = ({ handleSubmit, inClient }) => {
-  const [client, setClient] = useState(inClient);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setClient({ ...client, [name]: value });
-  };
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-    handleSubmit(client);
-    setClient(inClient);
-  };
+  const formik = useFormik({
+    initialValues: inClient,
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required('Имя обязательно'),
+      surname: Yup.string()
+        .required('Фамилия обязательна'),
+      phone: Yup.string()
+        .required('Телефон обязателен')
+        .matches(/^\+375\s?\(?\d{2}\)?\s?\d{7}$/, 'Введите корректный номер телефона')
+    }),
+    validateOnChange: false,
+    validateOnBlur: true,
+    onSubmit: (values) => {
+      handleSubmit(values);
+      formik.resetForm();
+    },
+  });
 
   return (
-      <form onSubmit={onSubmit}>
+    <form onSubmit={formik.handleSubmit}>
       <Container>
         <Typography variant="h6" component="h2">
           Add
@@ -26,30 +34,35 @@ const Form = ({ handleSubmit, inClient }) => {
           label="Name"
           type="text"
           name="name"
-          value={client.name}
-          onChange={handleChange}
-          required
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
         />
         <TextField
           label="Surname"
           type="text"
           name="surname"
-          value={client.surname}
-          onChange={handleChange}
-          required
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.surname}
+          error={formik.touched.surname && Boolean(formik.errors.surname)}
+          helperText={formik.touched.surname && formik.errors.surname}
         />
         <TextField
           label="Phone"
           type="text"
           name="phone"
-          value={client.phone}
-          onChange={handleChange}
-          required
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.phone}
+          error={formik.touched.phone && Boolean(formik.errors.phone)}
+          helperText={formik.touched.phone && formik.errors.phone}
         />
-        <Button type="submit"
-            variant="add">Add</Button>
+        <Button type="submit" variant="add">Add</Button>
       </Container>
-      </form>
+    </form>
   );
 };
 
