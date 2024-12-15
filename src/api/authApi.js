@@ -14,17 +14,3 @@ export const signIn = async (username, password) => {
         throw error.response ? error.response.data : error;
     }
 };
-
-export const fetchClients = async (token) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/client`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching clients:', error);
-        throw error.response ? error.response.data : error;
-    }
-};

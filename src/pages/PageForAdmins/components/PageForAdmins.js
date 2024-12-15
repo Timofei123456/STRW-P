@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchClients } from '../../../redux/slicers/clientSlice';
-import { addClient, deleteClient } from '../../../redux/slicers/clientSlice';
+import { fetchClients, addClient, deleteClient, updateClient } from '../../../redux/slicers/clientSlice';
 import Form from './Form';
 import Table from './Table';
 import CardView from './CardView';
@@ -13,7 +12,6 @@ const PageForAdmins = () => {
 
     const clients = useSelector(state => state.clientState.clients || []);
     const error = useSelector(state => state.clientState.error || null);
-    
     const token = useSelector(state => state.authState.token);
 
     useEffect(() => {
@@ -23,11 +21,30 @@ const PageForAdmins = () => {
     }, [dispatch, token]);
 
     const handleDeleteClient = async (id) => {
-        await dispatch(deleteClient({ id, token }));
+        try {
+            await dispatch(deleteClient({ id, token }));
+            dispatch(fetchClients(token));
+        } catch (err) {
+            console.error("Error deleting client:", err);
+        }
     };
 
     const handleAddClient = async (client) => {
-        await dispatch(addClient({ client, token }));
+        try {
+            await dispatch(addClient({ client, token }));
+            dispatch(fetchClients(token));
+        } catch (err) {
+            console.error("Error adding client:", err);
+        }
+    };
+
+    const handleUpdateClient = async (updatedData) => {
+        try {
+            await dispatch(updateClient({ client: updatedData, token }));
+            dispatch(fetchClients(token));
+        } catch (err) {
+            console.error("Error updating client:", err);
+        }
     };
 
     const toggleView = () => {
@@ -50,13 +67,13 @@ const PageForAdmins = () => {
                     <div>Error: {error}</div>
                 ) : Array.isArray(clients) && clients.length > 0 ? (
                     view === 'table' ? (
-                        <Table clients={clients} delClient={handleDeleteClient} />
+                        <Table clients={clients} delClient={handleDeleteClient} updateClient={handleUpdateClient} />
                     ) : (
-                        <CardView clients={clients} delClient={handleDeleteClient} />
+                        <CardView clients={clients} delClient={handleDeleteClient} updateClient={handleUpdateClient} />
                     )
                 ) : (
                     <Container>
-                    <Typography>No clients available</Typography>
+                        <Typography>No clients available</Typography>
                     </Container>
                 )}
             </Box>

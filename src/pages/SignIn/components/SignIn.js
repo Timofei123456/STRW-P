@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-import { CssBaseline, Paper, Typography, TextField, Button } from '@mui/material';
+import { CssBaseline, Paper, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInUser , signErrorUser  } from '../../../redux/slicers/authSlice';
-import { signIn } from '../../../api/authApi';
-import { fetchCurrentUser  } from '../../../api/userApi';
-import { setCurrentUser  } from '../../../redux/slicers/userSlice';
+import { signIn, signErrorUser } from '../../../redux/slicers/authSlice'; // Импортируем необходимые действия
+import { fetchCurrentUser } from '../../../redux/slicers/userSlice'; // Импортируем thunk для получения текущего пользователя
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -15,6 +13,7 @@ function SignIn() {
 
   const error = useSelector(state => state.authState.error);
   const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
+  const loading = useSelector(state => state.authState.loading); // Получаем состояние загрузки
 
   const formik = useFormik({
     initialValues: {
@@ -26,41 +25,29 @@ function SignIn() {
         .required('Имя пользователя обязательно'),
       password: Yup.string()
         .required('Пароль обязателен')
-        .min(4, 'Пароль должен содержать минимум 4 символов'),
+        .min(4, 'Пароль должен содержать минимум 4 символа'),
     }),
     onSubmit: async (values) => {
       const { username, password } = values;
 
-      try {
-        const token = await signIn(username, password);
-        dispatch(signInUser ({ token }));
-
-        const userInfo = await fetchCurrentUser (username, token);
-        dispatch(setCurrentUser (userInfo));
-
-        navigate("/");
-      } catch (error) {
-        dispatch(signErrorUser (error.message));
-      }
+      dispatch(signIn({ username, password }))
+        .unwrap()
+        .then((token) => {
+          dispatch(fetchCurrentUser(token));
+            navigate("/")
+        })
+        .catch((error) => {
+          const errorMessage = error.response?.data?.message || 'Ошибка входа';
+          dispatch(signErrorUser(errorMessage));
+        });
     },
   });
 
   useEffect(() => {
     if (isAuthenticated) {
-      const timer = setTimeout(() => {
-        navigate("/");
-      }, 100);
-
-      return () => clearTimeout(timer);
+        navigate("/")
     }
   }, [isAuthenticated, navigate]);
-
-  useEffect(() => {
-    if (error) {
-      alert(error);
-      dispatch(signErrorUser (null));
-    }
-  }, [error, dispatch]);
 
   return (
     <>
@@ -99,10 +86,16 @@ function SignIn() {
             variant="auth"
             color="primary"
             fullWidth
+            disabled={loading}
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
           >
-            Sign In
+            {loading ? ' ' : 'Sign In'}
           </Button>
-          {error && <Typography color="error">{error}</Typography>}
+          {error && (
+            <Typography color="error" style={{ marginTop: '10px' }}>
+              {error}
+            </Typography>
+          )}
         </form>
       </Paper>
     </>
