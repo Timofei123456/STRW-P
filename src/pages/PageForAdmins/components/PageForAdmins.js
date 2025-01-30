@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchClients, addClient, deleteClient, updateClient } from '../../../redux/slicers/clientSlice';
+import { fetchClients, addClient, deleteClient, updateClient } from '../../../redux/slices/clientSlice';
 import Form from './Form';
 import Table from './Table';
 import CardView from './CardView';

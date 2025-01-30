@@ -248,6 +248,24 @@ const lightTheme = createTheme({
                         },
                     }),
                 },
+                {
+                    props: { variant: 'cancel' },
+                    style: ({ theme }) => ({
+                        fontSize: '14px',
+                        padding: '5px 10px',
+                        margin: '5px',
+                        borderRadius: '5px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        backgroundColor: theme.palette.add.main,
+                        color: theme.palette.text.secondary,
+                        boxSizing: 'border-box',
+                        width: '50%',
+                        '&:hover': {
+                            backgroundColor: theme.palette.add.altermain,
+                        },
+                    }),
+                },
             ],
         },
         MuiBox: {
@@ -271,7 +289,6 @@ const lightTheme = createTheme({
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                     borderRadius: '10px',
                     width: '99vw',
-                    
                 },
             },
         },
@@ -321,6 +338,25 @@ const lightTheme = createTheme({
                     fontWeight: 'bold',
                     padding: '8px 10px',
                 },
+            },
+        },
+        MuiModal: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    height: 200,
+                    backgroundColor: theme.palette.background.paper,
+                    border: `10px solid ${theme.palette.background.even}`,
+                    borderRadius: '10px',
+                    padding: 40,
+                }),
             },
         },
     },

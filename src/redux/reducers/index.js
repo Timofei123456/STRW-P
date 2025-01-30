@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import userReducer from '../slicers/userSlice';
-import authReducer from "../slicers/authSlice";
-import clientReducer from "../slicers/clientSlice";
-import accountReducer from "../slicers/accountSlice";
-import transactionReducer from "../slicers/transactionSlice";
+import userReducer from '../slices/userSlice';
+import authReducer from "../slices/authSlice";
+import clientReducer from "../slices/clientSlice";
+import accountReducer from "../slices/accountSlice";
+import transactionReducer from "../slices/transactionSlice";
 
 const rootReducer = combineReducers({
     userState: userReducer,

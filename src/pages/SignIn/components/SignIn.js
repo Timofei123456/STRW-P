@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { CssBaseline, Paper, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signIn, signErrorUser } from '../../../redux/slicers/authSlice'; // Импортируем необходимые действия
-import { fetchCurrentUser } from '../../../redux/slicers/userSlice'; // Импортируем thunk для получения текущего пользователя
+import { signIn, signErrorUser } from '../../../redux/slices/authSlice'; // Импортируем необходимые действия
+import { fetchCurrentUser } from '../../../redux/slices/userSlice'; // Импортируем thunk для получения текущего пользователя
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 

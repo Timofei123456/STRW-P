@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Table, Button, TableBody, TableRow, TableHead, TableCell, Paper, TextField } from "@mui/material";
+import ModalWindowForDelete from './ModalWindowForDelete';
 
 const ClientTable = ({ clients, delClient, updateClient }) => {
     const [editingClientId, setEditingClientId] = useState(null);
     const [editedClientData, setEditedClientData] = useState({});
+    const [openModal, setOpenModal] = useState(false);
+    const [clientIdToDelete, setClientIdToDelete] = useState(null);
 
     const handleEditClick = (client) => {
         if (editingClientId === client.id) {
@@ -33,6 +36,20 @@ const ClientTable = ({ clients, delClient, updateClient }) => {
             ...prevData,
             [name]: value,
         }));
+    };
+
+    const handleDeleteClick = (id) => {
+        setClientIdToDelete(id);
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleDelete = () => {
+        delClient(clientIdToDelete);
+        setOpenModal(false);
     };
 
     return (
@@ -98,12 +115,17 @@ const ClientTable = ({ clients, delClient, updateClient }) => {
                                 <Button variant="edit" onClick={() => handleEditClick(client)}>
                                     {editingClientId === client.id ? 'OK' : 'EDIT'}
                                 </Button>
-                                <Button variant="delete" onClick={() => delClient(client.id)}>DELETE</Button>
+                                <Button variant="delete" onClick={() => handleDeleteClick(client.id)}>DELETE</Button>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            <ModalWindowForDelete
+                open={openModal}
+                handleClose={handleCloseModal}
+                handleDelete={handleDelete}
+            />
         </Paper>
     );
 };

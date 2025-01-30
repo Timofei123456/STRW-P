@@ -1,28 +1,44 @@
 import React, { useEffect } from 'react';
-import { Box, Typography, Paper, Grid2, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Paper, Grid2 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAccountsOfCurrentUser  } from '../../../redux/slicers/accountSlice';
-import { fetchTransactionsOfCurrentUser  } from '../../../redux/slicers/transactionSlice';
+import { fetchAccountsOfCurrentUser } from '../../../redux/slices/accountSlice';
+import { fetchTransactionsOfCurrentUser } from '../../../redux/slices/transactionSlice';
+import { AgGridReact } from 'ag-grid-react';
+import { ClientSideRowModelModule, ValidationModule, PaginationModule } from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 const PageForUsers = () => {
     const dispatch = useDispatch();
-    const currentUser  = useSelector(state => state.userState.currentUser );
+    const currentUser = useSelector(state => state.userState.currentUser);
     const accounts = useSelector(state => state.accountState.accounts);
     const transactions = useSelector(state => state.transactionState.transactions);
     const token = useSelector(state => state.authState.token);
+    const modules = [ClientSideRowModelModule, ValidationModule, PaginationModule];
+
 
     const clientData = {
-        name: currentUser  ? currentUser.client.name : 'No Client',
-        surname: currentUser  ? currentUser.client.surname : 'No Client',
-        phone: currentUser  ? currentUser.client.phone : 'No Client',
+        name: currentUser ? currentUser.client.name : 'No Client',
+        surname: currentUser ? currentUser.client.surname : 'No Client',
+        phone: currentUser ? currentUser.client.phone : 'No Client',
     };
 
     useEffect(() => {
         if (token) {
-            dispatch(fetchAccountsOfCurrentUser (token));
-            dispatch(fetchTransactionsOfCurrentUser (token));
+            dispatch(fetchAccountsOfCurrentUser(token));
+            dispatch(fetchTransactionsOfCurrentUser(token));
         }
     }, [dispatch, token]);
+
+    const columnDefs = [
+        { field: 'id', headerName: 'ID' },
+        { field: 'type', headerName: 'Type' },
+        { field: 'amount', headerName: 'Amount' },
+        {
+            field: 'date',
+            headerName: 'Date',
+            valueFormatter: params => new Date(params.value).toLocaleDateString(),
+        },
+    ];
 
     return (
         <Box>
@@ -53,32 +69,13 @@ const PageForUsers = () => {
                 <Grid2 item xs={12} md={6}>
                     <Paper variant="main">
                         <Typography variant="h6">Transactions</Typography>
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Transaction ID</TableCell>
-                                        <TableCell>Amount</TableCell>
-                                        <TableCell>Date</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {transactions.length > 0 ? (
-                                        transactions.map(transaction => (
-                                            <TableRow key={transaction.id}>
-                                                <TableCell>{transaction.id}</TableCell>
-                                                <TableCell>${transaction.amount}</TableCell>
-                                                <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
-                                            </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={3}>No transactions available</TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        <AgGridReact
+                            columnDefs={columnDefs}
+                            rowData={transactions}
+                            pagination={true}
+                            paginationPageSize={20}
+                            modules={modules}
+                        />
                     </Paper>
                 </Grid2>
             </Grid2>

@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import NavBar from './NavBar';
 import Router from './Router';
 import { lightTheme, darkTheme } from '../theme/theme';
-import { fetchClients } from '../redux/slicers/clientSlice';
+import { fetchClients } from '../redux/slices/clientSlice';
 
 function App() {
   const dispatch = useDispatch();
